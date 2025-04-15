@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Séries - Cinetech</title>
+  <link rel="stylesheet" href="../styles/css/movies.css">
+  <script src="../scripts/series.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>SÉRIES</h1>
+    
+    <div id="loader" style="display: none;">Chargement...</div>
+    
+    
+    <label for="genreSelect">Filtrer par genre :</label>
+    <select id="genreSelect">
+      <option value="">Tous</option>
+    </select>
+    
+    <div id="movie-list"></div>
+    
+    <label for="perPage">Séries par page :</label>
+    <select id="perPage">
+      <option value="5">5</option>
+      <option value="10">10</option>
+      <option value="20" selected>20</option>
+    </select>
+
+    <div id="pagination"></div>
+
+    <div id="page-number" style="display: none;"></div>
+  </main>
+</body>
+</html>
