@@ -1,13 +1,11 @@
 const apiKey = "a58786c2c89acd6f0fa2d57fdee642cd";
 
-const movieList = document.getElementById('movie-list');
-const pageNumberDisplay = document.getElementById('page-number');
-const loader = document.getElementById('loader');
-const genreSelect = document.getElementById('genreSelect');
-const perPageSelect = document.getElementById('perPage');
-const pagination =document.getElementById('pagination');
-
-
+const seriesList     = document.getElementById('movie-list'); // si tu préfères, renomme en "series-list" et mets à jour le HTML
+const pageNumberDisplay = document.getElementById('page-number'); // facultatif, voir explications précédentes
+const loader         = document.getElementById('loader');
+const genreSelect    = document.getElementById('genreSelect');
+const perPageSelect  = document.getElementById('perPage');
+const pagination     = document.getElementById('pagination');
 
 let perPage = parseInt(perPageSelect.value, 10);
 let selectedGenre = '';
@@ -15,7 +13,7 @@ let currentPage = 1;
 
 async function fetchGenres() {
   try {
-    const res = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}&language=fr-FR`);
+    const res = await fetch(`https://api.themoviedb.org/3/genre/tv/list?api_key=${apiKey}&language=fr-FR`);
     const data = await res.json();
 
     data.genres.forEach(genre => {
@@ -29,63 +27,67 @@ async function fetchGenres() {
   }
 }
 
-// Écouteur sur changement du select des genres
+// Select genre listener
 genreSelect.addEventListener('change', () => {
   selectedGenre = genreSelect.value;
   currentPage = 1;
-  fetchMovies(currentPage);
+  fetchSeries(currentPage);
 });
 
-// Écouteur sur le select des films par page
+// Listener series per page
 perPageSelect.addEventListener('change', () => {
   perPage = parseInt(perPageSelect.value, 10);
-  fetchMovies(currentPage);
+  fetchSeries(currentPage);
 });
 
-async function fetchMovies(page = 1) {
+async function fetchSeries(page = 1) {
   loader.style.display = 'block';
-  movieList.innerHTML = ''; 
+  seriesList.innerHTML = '';
+  pagination.innerHTML = ''; // Réinitialise la pagination
 
+  // Utilise l’endpoint Discover si un genre est sélectionné, sinon l’endpoint Popular
   let url = selectedGenre 
-    ? `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&language=fr-FR&page=${page}&with_genres=${selectedGenre}`
-    : `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=fr-FR&page=${page}`;
+    ? `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&language=fr-FR&page=${page}&with_genres=${selectedGenre}`
+    : `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=fr-FR&page=${page}`;
 
   try {
     const response = await fetch(url);
-    if (!response.ok) throw new Error('Erreur dans le chargement des films');
+    if (!response.ok) throw new Error('Erreur dans le chargement des séries');
 
     const data = await response.json();
-    displayMovies(data.results);
-    pageNumberDisplay.textContent = page;
+    displaySeries(data.results);
+    // Si tu souhaites afficher le numéro de page, assure-toi d'avoir un élément dans le HTML avec id "page-number"
+    if(pageNumberDisplay) {
+      pageNumberDisplay.textContent = page;
+    }
     currentPage = page;
 
     renderPagination(page, data.total_pages);
     
   } catch (error) {
-    movieList.innerHTML = `<p>Erreur de récupération des films : ${error.message}</p>`;
+    seriesList.innerHTML = `<p>Erreur de récupération des séries : ${error.message}</p>`;
   } finally {
     loader.style.display = 'none';
   }
 }
 
-function displayMovies(movies) {
-  movieList.innerHTML = '';
-  movies.slice(0, perPage).forEach(movie => {
+function displaySeries(seriesArray) {
+  seriesList.innerHTML = '';
+  seriesArray.slice(0, perPage).forEach(series => {
     const div = document.createElement('div');
     div.classList.add('movie-card');
     div.innerHTML = `
-      <h3>${movie.title}</h3>
-      <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}">
-      <p>${movie.release_date}</p>
+      <h3>${series.name}</h3>
+      <img src="https://image.tmdb.org/t/p/w300${series.poster_path}" alt="${series.name}">
+      <p>${series.first_air_date || 'Date inconnue'}</p>
     `;
-    movieList.appendChild(div);
+    seriesList.appendChild(div);
   });
 }
 
 function renderPagination(current, total) {
   pagination.innerHTML = '';
 
-  // Limite le nombre de pages affichées (ici 7)
   const maxPagesToShow = 7;
   let startPage = Math.max(1, current - 3);
   let endPage = Math.min(total, current + 3);
@@ -93,20 +95,18 @@ function renderPagination(current, total) {
   if (current <= 4) endPage = Math.min(total, maxPagesToShow);
   if (current >= total - 3) startPage = Math.max(1, total - maxPagesToShow + 1);
 
-  // Bouton "Précédent"
+
   if (current > 1) {
     const prev = createPageButton('«', current - 1);
     pagination.appendChild(prev);
   }
 
-  // Boutons numérotés
   for (let i = startPage; i <= endPage; i++) {
     const btn = createPageButton(i, i);
     if (i === current) btn.classList.add('active');
     pagination.appendChild(btn);
   }
 
-  // Bouton "Suivant"
   if (current < total) {
     const next = createPageButton('»', current + 1);
     pagination.appendChild(next);
@@ -117,10 +117,10 @@ function createPageButton(label, page) {
   const btn = document.createElement('button');
   btn.textContent = label;
   btn.addEventListener('click', () => {
-    fetchMovies(page);
+    fetchSeries(page);
   });
   return btn;
 }
 
-fetchMovies();
+fetchSeries();
 fetchGenres();
