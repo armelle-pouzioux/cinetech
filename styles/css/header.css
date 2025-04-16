@@ -17,7 +17,6 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
   position: relative;
   z-index: 1000;
 }
@@ -29,6 +28,15 @@ header {
   font-family: var(--font-2-);
   font-size: 60px;
   font-weight: normal;
+}
+
+.header-container{
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  width: 100vw;
+  align-items: center;
+  padding: 1em;
 }
 
 /* --- BURGER BUTTON ---*/
@@ -126,13 +134,16 @@ header {
 
 /* --- SEARCH BAR --- */
 .search-section {
-  padding: 1rem;
-  display: flex;
+  position: absolute;
+  left: 0;
+  top:8em;
+  width: 100%;
   justify-content: center;
+  display: flex;
 }
 
 .search-input {
-  width: 100%;
+  width: 80%;
   max-width: 500px;
   padding: 0.75rem 1rem;
   border: 1px solid #D59A38;
@@ -158,13 +169,22 @@ header {
   header{
     position: relative;
     z-index: 0;
-    width: 80%;
+    width: 100%;
+  }
+
+  .header-container{
+    width: 100vw;
+    justify-content: space-between;
+    flex-flow: row nowrap;
+  }
+
+  .logo{
+    z-index: 3;
   }
 
   .nav {
     display: flex !important;
-    justify-content: center;
-    gap:5em;
+    gap:3em;
     position: static;
     flex-direction: row;
     opacity: 1;
@@ -172,19 +192,15 @@ header {
     box-shadow: none;
     border: none;
     padding: 0;
-    min-width: auto;
-  }
-
-  main{
-    justify-content: flex-end;
-    align-items: center;
-    display: flex;
+    width: 20%;
   }
 
   .search-section{
-    top:1em;
     position: absolute;
-    z-index: 2;
-    min-width:300px;
+    z-index: 1;
+    width: 100vw;
+    justify-content: center;
+    top:2em;
+    
   }
 }
