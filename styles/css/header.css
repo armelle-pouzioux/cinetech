@@ -21,6 +21,10 @@ header {
   z-index: 1000;
 }
 
+main{
+  margin-top:7em;
+}
+
 .logo {
   font-size: 2rem;
   font-weight: bold;
@@ -28,13 +32,14 @@ header {
   font-family: var(--font-2-);
   font-size: 60px;
   font-weight: normal;
+  cursor: pointer;
 }
 
 .header-container{
   display: flex;
   justify-content: space-between;
   flex-flow: row wrap;
-  width: 100vw;
+  width: 90vw;
   align-items: center;
   padding: 1em;
 }
@@ -139,7 +144,9 @@ header {
   top:8em;
   width: 100%;
   justify-content: center;
+  align-items: center;
   display: flex;
+  flex-flow: column nowrap;
 }
 
 .search-input {
@@ -216,6 +223,7 @@ main{
 
   .logo{
     z-index: 3;
+    cursor: pointer;
   }
 
   .nav {
