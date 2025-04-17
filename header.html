@@ -4,34 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
-    <link rel="stylesheet" href="../styles/css/header.css">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Six+Caps&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/css/header.css">
+    <script src="js/header.js" defer></script>
 </head>
+
 <body>
-    <header>
-        <h1 class="logo" id="logo">Flimz</h1>
+  <header class="header">
+    <div class="header-container">
+      <h1 class="logo" id="logo">FILMFLIMZ</h1>
+  
+      <label class="burger" id="burger-button">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
 
-        <label class="burger" for="burger">
-            <input type="checkbox" id="burger">
-            <span></span>
-            <span></span>
-            <span></span>
-        </label>
+    
+      <nav class="nav" id="nav">
+        <a href="favorites.html">Favoris</a>
+        <a href="movies.html">Films</a>
+        <a href="series.html">Séries</a>
+      </nav>
+    </div>
 
-        <nav class="header-nav">
-            <a href="favorites.html">Favoris</a>
-            <a href="movies.html">Films</a>
-            <a href="series.html">Séries</a>
-        </nav>
-    </header>
-    <main>
-        <div class="search-wrapper"> 
+    <div class="search-container">
+      <section class="search-section">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Rechercher un film ou une série..."
+          aria-label="Champ de recherche"
+        />
 
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="">
-            </div>
-            
-            <div class="search-results"></div>
-    </main>
+        <div id="searchResults"></div>
+      </section>
+    </div>
+
+  </header>
+
 </body>
 </html>

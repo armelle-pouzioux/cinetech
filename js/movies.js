@@ -71,14 +71,22 @@ async function fetchMovies(page = 1) {
 function displayMovies(movies) {
   movieList.innerHTML = '';
   movies.slice(0, perPage).forEach(movie => {
-    const div = document.createElement('div');
-    div.classList.add('movie-card');
-    div.innerHTML = `
+    const card = document.createElement('div');
+    card.classList.add('movie-card');
+    // on stocke l’id et le type pour la redirection
+    card.dataset.id   = movie.id;
+    card.dataset.type = 'movie';
+    card.innerHTML = `
       <h3>${movie.title}</h3>
       <img src="https://image.tmdb.org/t/p/w300${movie.poster_path}" alt="${movie.title}">
       <p>${movie.release_date}</p>
     `;
-    movieList.appendChild(div);
+    // au clic, on va vers details.html?type=movie&id=xxx
+    card.addEventListener('click', () => {
+      const { type, id } = card.dataset;
+      window.location.href = `details.html?type=${type}&id=${id}`;
+    });
+    movieList.appendChild(card);
   });
 }
 

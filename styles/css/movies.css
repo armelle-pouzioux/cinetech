@@ -1,21 +1,71 @@
-/* styles.css */
+:root{
+    --color-1-: #1E1315;
+    --color-2-: #D59A38;
+    --color-3-:#f6f6f6;
+    --font-1-: "Albert Sans", sans-serif;
+    --font-2-:"Six Caps", sans-serif;
+}
+  
+*{
+    margin:0;
+    padding: 0;
+    font-family: var(--font-1-);
+    background-color: var(--color-1-);
+}
+
+#select-section{
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    gap: 1em;
+}
+
+select {
+    color: var(--color-3-);
+    font-family: var(--font-1-);
+}
+
+button {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    color: var(--color-2-);
+    border-color: var(--color-2-);
+}
+
 #movie-list {
     display: flex;
     flex-flow: wrap;
     justify-content: space-around;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 2rem;
+    padding: 2rem;
 }
 
 .movie-card {
     text-align: center;
     justify-content: center;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-2-);
     border-radius: 8px;
-    padding: 0.5rem;
-    background: #f8f8f8;
-    min-width: 300px;
-    max-width: 300px;
+    padding: 0 0.5rem;
+    background: var(--color-1-);
+    display: flex;
+    flex-flow: column wrap;
+    max-width: 350px;
+    min-width: 350px;
+
+    h3{
+        width: 100%;
+        padding: 1em 0;
+        min-height:2em;
+        text-align: center;
+        vertical-align:middle;
+    }
+    p{
+        padding: 1em;
+    }
+    img{
+        object-fit: cover;
+    };
 }
 
 #pagination {
