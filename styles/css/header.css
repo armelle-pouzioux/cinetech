@@ -159,7 +159,43 @@ header {
   color:#f6f6f6;
 }
 
+/* MAIN ___________________________________________________________*/
 
+
+main{
+  color: var(--color-3-);
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-flow:wrap;
+  
+}
+
+#details {
+  width: 60%;
+  height: auto;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  text-align: center;
+  padding: 20px;
+  border: solid;
+  border-color: var(--color-2-);
+  
+
+  img{
+    object-fit: contain;
+    padding: 20px;
+  }
+
+
+}
+
+#reviews{
+  width: 100%;
+}
+
+/* MEDIA QUERIES _________________________________________________ */
 /* --- DESKTOP --- */
 @media (min-width: 920px) {
   .burger {

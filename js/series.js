@@ -86,16 +86,25 @@ function displaySeries(seriesArray) {
   seriesList.innerHTML = '';
   // On n'affiche que le nombre défini par perPage
   seriesArray.slice(0, perPage).forEach(series => {
-    const div = document.createElement('div');
-    div.classList.add('movie-card'); // Tu peux renommer la classe CSS en "series-card" si besoin
-    div.innerHTML = `
+    const card = document.createElement('div');
+    card.classList.add('movie-card'); // ou "series-card" si tu préfères
+    // stocke l'id et le type pour la redirection
+    card.dataset.id   = series.id;
+    card.dataset.type = 'tv';
+    card.innerHTML = `
       <h3>${series.name}</h3>
       <img src="https://image.tmdb.org/t/p/w300${series.poster_path}" alt="${series.name}">
       <p>${series.first_air_date || 'Date inconnue'}</p>
     `;
-    seriesList.appendChild(div);
+    // au clic, on va vers details.html?type=tv&id=xxx
+    card.addEventListener('click', () => {
+      const { type, id } = card.dataset;
+      window.location.href = `details.html?type=${type}&id=${id}`;
+    });
+    seriesList.appendChild(card);
   });
 }
+
 
 // --------------------------
 // 4. Pagination numérotée dynamique
