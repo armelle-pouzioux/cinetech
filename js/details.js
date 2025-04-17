@@ -61,16 +61,24 @@ function renderDetails(data, type) {
 }
 
 async function fetchReviews(type, id) {
-  const url = `https://api.themoviedb.org/3/${type}/${id}/reviews` +
-              `?api_key=${apiKey}&language=fr-FR&page=1`;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('Impossible de charger les commentaires');
-    const { results } = await res.json();
-    renderReviews(results);
-  } catch (err) {
-    reviewsSection.innerHTML = `<p>${err.message}</p>`;
-  }
+    let url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=fr-FR&page=1`;
+    try {
+      let res = await fetch(url);
+      if (!res.ok) throw new Error('Impossible de charger les commentaires');
+      let { results } = await res.json();
+  
+      // Si aucun commentaire en FR, essaie en EN
+      if (results.length === 0) {
+        url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=en-US&page=1`;
+        res = await fetch(url);
+        if (!res.ok) throw new Error('Impossible de charger les commentaires');
+        ({ results } = await res.json());
+      }
+  
+      renderReviews(results);
+    } catch (err) {
+      reviewsSection.innerHTML = `<p>${err.message}</p>`;
+    }
 }
 
 function renderReviews(comments) {

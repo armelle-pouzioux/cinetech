@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     
     if (burgerBtn && nav) {
-      console.log("Configuration du bouton burger");
+      // console.log("Configuration du bouton burger");
       
       burgerBtn.addEventListener('click', () => {
         console.log("Clic sur le bouton burger détecté");
