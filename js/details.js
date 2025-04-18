@@ -61,41 +61,133 @@ function renderDetails(data, type) {
 }
 
 async function fetchReviews(type, id) {
-    let url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=fr-FR&page=1`;
-    try {
-      let res = await fetch(url);
+  let url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=fr-FR&page=1`;
+  try {
+    let res = await fetch(url);
+    if (!res.ok) throw new Error('Impossible de charger les commentaires');
+    let { results } = await res.json();
+
+    // Fallback vers EN si aucun résultat en FR
+    if (results.length === 0) {
+      url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=en-US&page=1`;
+      res = await fetch(url);
       if (!res.ok) throw new Error('Impossible de charger les commentaires');
-      let { results } = await res.json();
-  
-      // Si aucun commentaire en FR, essaie en EN
-      if (results.length === 0) {
-        url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=en-US&page=1`;
-        res = await fetch(url);
-        if (!res.ok) throw new Error('Impossible de charger les commentaires');
-        ({ results } = await res.json());
-      }
-  
-      renderReviews(results);
-    } catch (err) {
-      reviewsSection.innerHTML = `<p>${err.message}</p>`;
+      ({ results } = await res.json());
     }
+
+    renderReviews(results);
+    setupAddReviewForm(type, id, results); // <- formulaire ici
+  } catch (err) {
+    reviewsSection.innerHTML = `<p>${err.message}</p>`;
+  }
 }
 
 function renderReviews(comments) {
   reviewsSection.innerHTML = '<h2>Commentaires</h2>';
-  if (!comments || comments.length === 0) {
-    reviewsSection.innerHTML += '<p>Aucun commentaire disponible.</p>';
-    return;
-  }
   const ul = document.createElement('ul');
-  comments.forEach(c => {
-    const date = new Date(c.created_at).toLocaleDateString('fr-FR');
+
+  if (comments && comments.length > 0) {
+    comments.forEach(c => {
+      const date = new Date(c.created_at).toLocaleDateString('fr-FR');
+      const li = document.createElement('li');
+      const pAuthor = document.createElement('p');
+      pAuthor.innerHTML = `<strong>${c.author}</strong> <em>(${date})</em>`;
+      const pContent = document.createElement('p');
+      pContent.textContent = c.content;
+      li.appendChild(pAuthor);
+      li.appendChild(pContent);
+      ul.appendChild(li);
+    });
+  } else {
+    reviewsSection.innerHTML += '<p>Aucun commentaire disponible.</p>';
+  }
+
+  // Ajoute les commentaires locaux
+  const params = new URLSearchParams(window.location.search);
+  const type = params.get('type');
+  const id = params.get('id');
+  const localComments = getLocalComments(type, id);
+
+  localComments.forEach(c => {
     const li = document.createElement('li');
-    li.innerHTML = `
-      <p><strong>${c.author}</strong> <em>(${date})</em></p>
-      <p>${c.content}</p>
-    `;
+    const pAuthor = document.createElement('p');
+    pAuthor.innerHTML = `<strong>${c.author}</strong> <em>(${c.date})</em>`;
+    const pContent = document.createElement('p');
+    pContent.textContent = c.content;
+    li.appendChild(pAuthor);
+    li.appendChild(pContent);
     ul.appendChild(li);
   });
+
   reviewsSection.appendChild(ul);
+}
+
+function setupAddReviewForm(type, id, existingComments = []) {
+  const addReviewSection = document.getElementById('add-review');
+  addReviewSection.innerHTML = ''; // Clear previous form if any
+
+  const form = document.createElement('form');
+  const h3 = document.createElement('h3');
+  h3.textContent = 'Laisser un commentaire';
+
+  const inputAuthor = document.createElement('input');
+  inputAuthor.type = 'text';
+  inputAuthor.name = 'author';
+  inputAuthor.placeholder = 'Votre nom';
+  inputAuthor.required = true;
+
+  const br1 = document.createElement('br');
+
+  const textarea = document.createElement('textarea');
+  textarea.name = 'content';
+  textarea.placeholder = 'Votre commentaire';
+  textarea.required = true;
+
+  const br2 = document.createElement('br');
+
+  const submitBtn = document.createElement('button');
+  submitBtn.type = 'submit';
+  submitBtn.textContent = 'Envoyer';
+
+  form.appendChild(h3);
+  form.appendChild(inputAuthor);
+  form.appendChild(br1);
+  form.appendChild(textarea);
+  form.appendChild(br2);
+  form.appendChild(submitBtn);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const author = inputAuthor.value.trim();
+    const content = textarea.value.trim();
+    if (!author || !content) return;
+
+    const newComment = {
+      author,
+      content,
+      date: new Date().toLocaleDateString('fr-FR')
+    };
+
+    saveLocalComment(type, id, newComment);
+    form.reset();
+    renderReviews(existingComments); // reaffiche les TMDb + commentaires locaux
+  });
+
+  addReviewSection.appendChild(form);
+}
+
+
+
+
+function getLocalComments(type, id) {
+  const key = `comments-${type}-${id}`;
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : [];
+}
+
+function saveLocalComment(type, id, comment) {
+  const key = `comments-${type}-${id}`;
+  const comments = getLocalComments(type, id);
+  comments.push(comment);
+  localStorage.setItem(key, JSON.stringify(comments));
 }

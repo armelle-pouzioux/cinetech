@@ -29,11 +29,11 @@ main{
   flex-flow: wrap;
   justify-content: center;
   flex: 1;
-  gap: 100px;
+  gap: 20px;
 }
 
 
-#details,#reviews{
+#details,#reviews,#add-review{
   width: 800px;
   display: flex;
   flex-flow: column wrap;
@@ -41,6 +41,12 @@ main{
   border-color: var(--color-2-);
   justify-content: center;
   text-align: center;
+  margin: 20px;
+
+  li{
+    list-style: none;
+  }
+  
 
   img{
     object-fit: contain;
@@ -50,7 +56,32 @@ main{
   p,h1,h2,h3{
     padding: 20px;
   }
+
+  form{
+    padding: 10px;
+    margin: 10px;
+
+  }
+
+  input, textarea{
+    width: 80%;
+    padding: 10px;
+    margin: 10px;
+  }
+
+
 }
+
+/* #add-review{
+  width: 250px;
+  border: solid;
+  border-color: var(--color-2-);
+  padding: 10px;
+  margin: 10px;
+
+  
+} */
+
 .logo {
   font-size: 2rem;
   font-weight: bold;

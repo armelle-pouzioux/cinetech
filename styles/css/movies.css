@@ -41,6 +41,14 @@ button {
     padding: 2rem;
 }
 
+.movie-list{
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+    gap: 2rem;
+    padding: 2rem;
+}
+
 .movie-card {
     text-align: center;
     justify-content: center;
