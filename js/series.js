@@ -43,9 +43,8 @@ perPageSelect.addEventListener('change', () => {
 async function fetchSeries(page = 1) {
   loader.style.display = 'block';
   seriesList.innerHTML = '';
-  pagination.innerHTML = ''; // Réinitialise la pagination
+  pagination.innerHTML = '';
 
-  // Utilise l’endpoint Discover si un genre est sélectionné, sinon l’endpoint Popular
   let url = selectedGenre 
     ? `https://api.themoviedb.org/3/discover/tv?api_key=${apiKey}&language=fr-FR&page=${page}&with_genres=${selectedGenre}`
     : `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=fr-FR&page=${page}`;
@@ -56,7 +55,7 @@ async function fetchSeries(page = 1) {
 
     const data = await response.json();
     displaySeries(data.results);
-    // Si tu souhaites afficher le numéro de page, assure-toi d'avoir un élément dans le HTML avec id "page-number"
+   
     if(pageNumberDisplay) {
       pageNumberDisplay.textContent = page;
     }
@@ -75,8 +74,7 @@ function displaySeries(seriesArray) {
   seriesList.innerHTML = '';
   seriesArray.slice(0, perPage).forEach(series => {
     const card = document.createElement('div');
-    card.classList.add('movie-card'); // ou "series-card" si tu préfères
-    // stocke l'id et le type pour la redirection
+    card.classList.add('movie-card');
     card.dataset.id   = series.id;
     card.dataset.type = 'tv';
     card.innerHTML = `
@@ -84,7 +82,6 @@ function displaySeries(seriesArray) {
       <img src="https://image.tmdb.org/t/p/w300${series.poster_path}" alt="${series.name}">
       <p>${series.first_air_date || 'Date inconnue'}</p>
     `;
-    // au clic, on va vers details.html?type=tv&id=xxx
     card.addEventListener('click', () => {
       const { type, id } = card.dataset;
       window.location.href = `details.html?type=${type}&id=${id}`;
@@ -94,9 +91,6 @@ function displaySeries(seriesArray) {
 }
 
 
-// --------------------------
-// 4. Pagination numérotée dynamique
-// --------------------------
 function renderPagination(current, total) {
   pagination.innerHTML = '';
 

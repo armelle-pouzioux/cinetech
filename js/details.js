@@ -38,7 +38,6 @@ function renderDetails(data, type) {
   const posterPath   = data.poster_path
     ? `https://image.tmdb.org/t/p/w500${data.poster_path}`
     : '';
-  // Récupérer le réalisateur si movie, ou créateur si séries
   let crewInfo = '';
   if (data.credits && data.credits.crew) {
     if (type === 'movie') {
@@ -67,7 +66,7 @@ async function fetchReviews(type, id) {
     if (!res.ok) throw new Error('Impossible de charger les commentaires');
     let { results } = await res.json();
 
-    // Fallback vers EN si aucun résultat en FR
+    // Fallback to EN if no results in FR
     if (results.length === 0) {
       url = `https://api.themoviedb.org/3/${type}/${id}/reviews?api_key=${apiKey}&language=en-US&page=1`;
       res = await fetch(url);
@@ -102,7 +101,7 @@ function renderReviews(comments) {
     reviewsSection.innerHTML += '<p>Aucun commentaire disponible.</p>';
   }
 
-  // Ajoute les commentaires locaux
+  // Add localstorage coms
   const params = new URLSearchParams(window.location.search);
   const type = params.get('type');
   const id = params.get('id');
